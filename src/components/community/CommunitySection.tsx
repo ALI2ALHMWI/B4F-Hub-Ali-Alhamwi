@@ -1,8 +1,9 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getPosts } from "../../services/api";
 import type { Post } from "../../types";
 import CommunityHeader from "./CommunityHeader";
 import PostList from "./PostList";
+import CreatePostForm from "./CreatePostForm";
 
 function CommunitySection() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -24,17 +25,22 @@ function CommunitySection() {
     } finally {
       setLoading(false);
     }
-  };
+  }
+
+  function handlePostCreated(newPost: Post): void {
+    setPosts((currentPosts) => [newPost, ...currentPosts]);
+  }
 
   useEffect(() => {
     void loadPosts();
-  },[]);
+  }, []);
 
   return (
     <section className="hub-panel community-panel">
       <CommunityHeader postCount={posts.length} />
 
       <div className="community-content">
+        <CreatePostForm onPostCreated={handlePostCreated} />
         <PostList
           posts={posts}
           loading={loading}

@@ -542,3 +542,124 @@ button {
     padding: 18px 20px 22px;
   }
 }
+.create-post-form {
+  margin-bottom: 20px;
+  padding: 17px;
+  background: #f8faff;
+  border: 1px solid #e4eaf5;
+  border-radius: 16px;
+}
+
+.compose-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+
+.compose-heading h3 {
+  margin: 0;
+  color: #27344a;
+  font-size: 15px;
+}
+
+.character-count {
+  color: #98a3b2;
+  font-size: 11px;
+}
+
+.create-post-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  padding: 12px;
+  border: 1px solid #dce3ef;
+  border-radius: 11px;
+  outline: none;
+  color: #344257;
+  background: #ffffff;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.create-post-form textarea:focus {
+  border-color: #849cf0;
+  box-shadow: 0 0 0 3px rgba(52, 87, 213, 0.1);
+}
+
+.create-post-form textarea:disabled,
+.create-post-form select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.compose-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.create-post-form select {
+  min-width: 160px;
+  padding: 9px 11px;
+  border: 1px solid #dce3ef;
+  border-radius: 9px;
+  outline: none;
+  color: #59677d;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.create-post-form select:focus {
+  border-color: #849cf0;
+  box-shadow: 0 0 0 3px rgba(52, 87, 213, 0.1);
+}
+
+.primary-button {
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 9px;
+  color: #ffffff;
+  background: #3457d5;
+  font-size: 12px;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.primary-button:hover {
+  background: #2948bc;
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-message {
+  margin: 11px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.form-validation-error,
+.form-request-error {
+  color: #bb4e63;
+}
+
+@media (max-width: 480px) {
+  .compose-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .create-post-form select,
+  .primary-button {
+    width: 100%;
+  }
+}
