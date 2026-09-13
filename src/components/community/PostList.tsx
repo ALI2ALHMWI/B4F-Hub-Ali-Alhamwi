@@ -6,9 +6,18 @@ interface PostListProps {
   loading: boolean;
   error: string | null;
   onRetry: () => void;
+  onToggleLike: (post: Post) => Promise<void>;
+  likingPostId: number | null;
 }
 
-function PostList({ posts, loading, error, onRetry }: PostListProps) {
+function PostList({
+  posts,
+  loading,
+  error,
+  onRetry,
+  onToggleLike,
+  likingPostId,
+}: PostListProps) {
   if (loading) {
     return (
       <div className="section-state" role="status">
@@ -54,7 +63,12 @@ function PostList({ posts, loading, error, onRetry }: PostListProps) {
   return (
     <div className="post-list">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <PostCard
+          key={post.id}
+          post={post}
+          onToggleLike={onToggleLike}
+          liking={likingPostId === post.id}
+        />
       ))}
     </div>
   );

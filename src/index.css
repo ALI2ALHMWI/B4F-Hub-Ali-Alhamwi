@@ -663,3 +663,45 @@ button {
     width: 100%;
   }
 }
+.like-button {
+  min-width: 72px;
+  padding: 7px 11px;
+  border: 1px solid #dbe3f0;
+  border-radius: 8px;
+  color: #53627a;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.like-button:hover:not(:disabled) {
+  color: #3457d5;
+  background: #f1f4ff;
+  border-color: #b9c6ef;
+}
+
+.like-button.liked {
+  color: #c9516b;
+  background: #fff0f3;
+  border-color: #f3c5cf;
+}
+
+.like-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.like-error-message {
+  margin-bottom: 14px;
+  padding: 11px 13px;
+  border: 1px solid #f1c7cf;
+  border-radius: 10px;
+  color: #a84459;
+  background: #fff2f4;
+  font-size: 12px;
+  line-height: 1.5;
+}

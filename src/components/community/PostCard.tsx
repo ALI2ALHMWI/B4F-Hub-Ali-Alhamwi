@@ -2,9 +2,11 @@ import type { Post } from "../../types";
 
 interface PostCardProps {
   post: Post;
+  onToggleLike: (post: Post) => Promise<void>;
+  liking: boolean;
 }
 
-function PostCard({ post }: PostCardProps) {
+function PostCard({ post, onToggleLike, liking }: PostCardProps) {
   const formattedDate = new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
@@ -42,6 +44,22 @@ function PostCard({ post }: PostCardProps) {
         <span className="post-status">
           {post.liked ? "Liked" : "Not liked"}
         </span>
+        <button
+          className={post.liked ? "like-button liked" : "like-button"}
+          type="button"
+          onClick={() => {
+            void onToggleLike(post);
+          }}
+          disabled={liking}
+          aria-pressed={post.liked}
+          aria-label={
+            post.liked
+              ? `Unlike post by ${post.author}`
+              : `Like post by ${post.author}`
+          }
+        >
+          {liking ? "Updating..." : post.liked ? "Unlike" : "Like"}
+        </button>
       </div>
     </article>
   );
