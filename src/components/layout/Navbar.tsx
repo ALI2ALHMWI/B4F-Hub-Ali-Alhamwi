@@ -14,7 +14,7 @@ function Navbar() {
         <div className="user-avatar">AH</div>
 
         <div className="user-info">
-          <strong>Ahmed Hassan</strong>
+          <strong>ِAli Alhamwi</strong>
           <span>B4F Trainee</span>
         </div>
       </div>
