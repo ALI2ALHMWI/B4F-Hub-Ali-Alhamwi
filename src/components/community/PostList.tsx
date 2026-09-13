@@ -4,6 +4,7 @@ import PostCard from "./PostCard";
 interface PostListProps {
   posts: Post[];
   loading: boolean;
+  totalPosts: number;
   error: string | null;
   onRetry: () => void;
   onToggleLike: (post: Post) => Promise<void>;
@@ -13,6 +14,7 @@ interface PostListProps {
 function PostList({
   posts,
   loading,
+  totalPosts,
   error,
   onRetry,
   onToggleLike,
@@ -42,6 +44,19 @@ function PostList({
         <button className="secondary-button" type="button" onClick={onRetry}>
           Try again
         </button>
+      </div>
+    );
+  }
+  if (posts.length === 0 && totalPosts > 0) {
+    return (
+      <div className="section-state">
+        <div className="state-icon" aria-hidden="true">
+          ⌕
+        </div>
+
+        <h3>No posts match your filters</h3>
+
+        <p>Try changing your search or selecting a different category.</p>
       </div>
     );
   }

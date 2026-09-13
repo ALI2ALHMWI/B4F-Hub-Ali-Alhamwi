@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { getPosts, updatePost } from "../../services/api";
-import type { Post } from "../../types";
+import type {
+  CommunityFilters as CommunityFiltersState,
+  Post,
+} from "../../types";
 import CommunityHeader from "./CommunityHeader";
 import PostList from "./PostList";
 import CreatePostForm from "./CreatePostForm";
+import CommunityFilters from "./CommunityFilters";
 
 function CommunitySection() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -11,6 +15,10 @@ function CommunitySection() {
   const [error, setError] = useState<string | null>(null);
   const [likingPostId, setLikingPostId] = useState<number | null>(null);
   const [likeError, setLikeError] = useState<string | null>(null);
+  const [filters, setFilters] = useState<CommunityFiltersState>({
+    search: "",
+    category: "all",
+  });
 
   async function loadPosts() {
     setLoading(true);
@@ -33,34 +41,51 @@ function CommunitySection() {
     setPosts((currentPosts) => [newPost, ...currentPosts]);
   }
 
-   async function handleToggleLike(post: Post): Promise<void> {
-     if (likingPostId !== null) {
-       return;
-     }
+  async function handleToggleLike(post: Post): Promise<void> {
+    if (likingPostId !== null) {
+      return;
+    }
 
-     setLikeError(null);
-     setLikingPostId(post.id);
+    setLikeError(null);
+    setLikingPostId(post.id);
 
-     try {
-       const updatedPost = await updatePost(post.id, {
-         liked: !post.liked,
-       });
+    try {
+      const updatedPost = await updatePost(post.id, {
+        liked: !post.liked,
+      });
 
-       setPosts((currentPosts) =>
-         currentPosts.map((currentPost) =>
-           currentPost.id === updatedPost.id ? updatedPost : currentPost,
-         ),
-       );
-     } catch (requestError) {
-       if (requestError instanceof Error) {
-         setLikeError(requestError.message);
-       } else {
-         setLikeError("Something went wrong while updating the like.");
-       }
-     } finally {
-       setLikingPostId(null);
-     }
-   }
+      setPosts((currentPosts) =>
+        currentPosts.map((currentPost) =>
+          currentPost.id === updatedPost.id ? updatedPost : currentPost,
+        ),
+      );
+    } catch (requestError) {
+      if (requestError instanceof Error) {
+        setLikeError(requestError.message);
+      } else {
+        setLikeError("Something went wrong while updating the like.");
+      }
+    } finally {
+      setLikingPostId(null);
+    }
+  }
+  function getFilteredPosts(): Post[] {
+    const normalizedSearch = filters.search.trim().toLowerCase();
+
+    return posts.filter((post) => {
+      const matchesCategory =
+        filters.category === "all" || post.category === filters.category;
+
+      const matchesSearch =
+        normalizedSearch === "" ||
+        post.author.toLowerCase().includes(normalizedSearch) ||
+        post.content.toLowerCase().includes(normalizedSearch);
+
+      return matchesCategory && matchesSearch;
+    });
+  }
+
+  const filteredPosts = getFilteredPosts();
 
   useEffect(() => {
     void loadPosts();
@@ -72,14 +97,22 @@ function CommunitySection() {
 
       <div className="community-content">
         <CreatePostForm onPostCreated={handlePostCreated} />
+
+        <CommunityFilters
+          filters={filters}
+          onFiltersChange={setFilters}
+          totalPosts={posts.length}
+          visiblePosts={filteredPosts.length}
+        />
         {likeError && (
           <div className="like-error-message" role="alert">
             {likeError}
           </div>
         )}
         <PostList
-          posts={posts}
+          posts={filteredPosts}
           loading={loading}
+          totalPosts={posts.length}
           error={error}
           onRetry={loadPosts}
           onToggleLike={handleToggleLike}
