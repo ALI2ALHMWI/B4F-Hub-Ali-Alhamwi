@@ -8,6 +8,7 @@ import CommunityHeader from "./CommunityHeader";
 import PostList from "./PostList";
 import CreatePostForm from "./CreatePostForm";
 import CommunityFilters from "./CommunityFilters";
+import { useNotifications } from "../notifications/NotificationCenter";
 
 function CommunitySection() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -20,7 +21,9 @@ function CommunitySection() {
     category: "all",
     onlyLiked: false,
   });
+  
 
+const { notify } = useNotifications();
   async function loadPosts() {
     setLoading(true);
     setError(null);
@@ -40,6 +43,7 @@ function CommunitySection() {
 
   function handlePostCreated(newPost: Post): void {
     setPosts((currentPosts) => [newPost, ...currentPosts]);
+
   }
 
   async function handleToggleLike(post: Post): Promise<void> {
@@ -60,6 +64,13 @@ function CommunitySection() {
           currentPost.id === updatedPost.id ? updatedPost : currentPost,
         ),
       );
+      notify(
+        updatedPost.liked
+          ? "Post liked successfully."
+          : "Post unliked successfully.",
+        "success",
+      );
+
     } catch (requestError) {
       if (requestError instanceof Error) {
         setLikeError(requestError.message);

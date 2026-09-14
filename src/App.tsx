@@ -2,20 +2,22 @@ import CommunitySection from "./components/community/CommunitySection";
 import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import OpportunitiesSection from "./components/opportunities/OpportunitiesSection";
+import { NotificationProvider } from "./components/notifications/NotificationCenter";
 
 function App() {
   return (
-    <div className="app-shell">
-      <Navbar />
+    <NotificationProvider>
+      <div className="app-shell">
+        <Navbar />
 
-      <main className="main-content">
-        <CommunitySection />
+        <main className="main-content">
+          <CommunitySection />
+          <OpportunitiesSection />
+        </main>
 
-       <OpportunitiesSection />
-      </main>
-
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </NotificationProvider>
   );
 }
 

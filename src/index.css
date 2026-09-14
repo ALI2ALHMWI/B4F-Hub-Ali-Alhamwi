@@ -983,6 +983,9 @@ button {
   .opportunity-card-actions button {
     width: 100%;
   }
+   .back-history-button {
+    width: 100%;
+  }
 
 }
 /* Opportunities */
@@ -1311,4 +1314,91 @@ button {
   color: #a86b08;
   background: #fff4d6;
   border-color: #e9c66f;
+}
+.back-history-button {
+  align-self: flex-start;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border: 1px solid #dbe3f0;
+  border-radius: 8px;
+  color: #3457d5;
+  background: #f8faff;
+  font-size: 11px;
+  font-weight: 700;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.back-history-button:hover {
+  color: #2948bc;
+  background: #eef2ff;
+  border-color: #b9c6ef;
+}
+/* Notifications */
+
+.notification {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: min(380px, calc(100vw - 32px));
+  padding: 13px 14px 13px 16px;
+  border: 1px solid #dce3ef;
+  border-radius: 12px;
+  color: #334155;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(31, 41, 55, 0.16);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.notification-success {
+  border-color: #bde8d0;
+  color: #216b4b;
+  background: #f0fff6;
+}
+
+.notification-error {
+  border-color: #f1c7cf;
+  color: #a84459;
+  background: #fff2f4;
+}
+
+.notification-info {
+  border-color: #c9d5fa;
+  color: #3457a8;
+  background: #f1f4ff;
+}
+
+.notification-close {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: currentColor;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.notification-close:hover {
+  background: rgba(52, 87, 213, 0.08);
+}
+
+@media (max-width: 480px) {
+  .notification {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+  }
 }

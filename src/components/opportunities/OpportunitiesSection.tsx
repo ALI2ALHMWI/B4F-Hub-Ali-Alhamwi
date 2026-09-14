@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import HashSet from "../../data-structures/HashSet";
+import Stack from "../../data-structures/Stack";
+import HashTable from "../../data-structures/HashTable";
 import { getOpportunities, updateOpportunity } from "../../services/api";
 import type {
   Opportunity,
@@ -8,6 +10,7 @@ import type {
 import OpportunitiesHeader from "./OpportunitiesHeader";
 import OpportunityFilters from "./OpportunityFilters";
 import OpportunityList from "./OpportunityList";
+import { useNotifications } from "../notifications/NotificationCenter";
 
 function OpportunitiesSection() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
@@ -18,13 +21,20 @@ function OpportunitiesSection() {
     type: "all",
     workMode: "all",
   });
-  const [expandedOpportunityId, setExpandedOpportunityId] = useState< number | null>(null);
+  const [expandedOpportunityId, setExpandedOpportunityId] = useState<
+    number | null
+  >(null);
 
-  const [applyingOpportunityId, setApplyingOpportunityId] = useState<  number | null >(null);
+  const [applyingOpportunityId, setApplyingOpportunityId] = useState<
+    number | null
+  >(null);
   const [applyError, setApplyError] = useState<string | null>(null);
   const savedOpportunityIds = useRef(new HashSet<number>());
   const [savedVersion, setSavedVersion] = useState(0);
-
+  const opportunityHistory = useRef(new Stack<number>());
+  const [historyVersion, setHistoryVersion] = useState(0);
+  const opportunityTable = useRef(new HashTable<Opportunity>());
+  const { notify } = useNotifications();
 
   async function loadOpportunities() {
     setLoading(true);
@@ -32,6 +42,11 @@ function OpportunitiesSection() {
     try {
       const loadedOpportunities = await getOpportunities();
       setOpportunities(loadedOpportunities);
+      opportunityTable.current.clear();
+
+      loadedOpportunities.forEach((opportunity) => {
+        opportunityTable.current.set(opportunity.id, opportunity);
+      });
     } catch (requestError) {
       if (requestError instanceof Error) {
         setError(requestError.message);
@@ -66,20 +81,49 @@ function OpportunitiesSection() {
   }
 
   function handleToggleDetails(opportunityId: number): void {
-    setExpandedOpportunityId((currentId) =>
-      currentId === opportunityId ? null : opportunityId,
-    );
+    setExpandedOpportunityId((currentId) => {
+      if (currentId === opportunityId) {
+        return null;
+      }
+
+      if (currentId !== null) {
+        opportunityHistory.current.push(currentId);
+        setHistoryVersion((currentVersion) => currentVersion + 1);
+      }
+
+      return opportunityId;
+    });
   }
+  function handleBackToPreviousOpportunity(): void {
+    const previousOpportunityId = opportunityHistory.current.pop();
+
+    if (previousOpportunityId === undefined) {
+      return;
+    }
+
+    const previousOpportunity = opportunityTable.current.get(
+      previousOpportunityId,
+    );
+
+    if (!previousOpportunity) {
+      return;
+    }
+
+    setExpandedOpportunityId(previousOpportunity.id);
+    setHistoryVersion((currentVersion) => currentVersion + 1);
+  }
+
   function handleToggleSaved(opportunityId: number): void {
     if (savedOpportunityIds.current.has(opportunityId)) {
       savedOpportunityIds.current.delete(opportunityId);
+      notify("Opportunity removed from saved items.", "info");
     } else {
       savedOpportunityIds.current.add(opportunityId);
+      notify("Opportunity saved successfully.", "success");
     }
 
     setSavedVersion((currentVersion) => currentVersion + 1);
   }
-
 
   async function handleApply(opportunity: Opportunity): Promise<void> {
     if (applyingOpportunityId !== null || opportunity.applied) {
@@ -94,6 +138,8 @@ function OpportunitiesSection() {
         applied: true,
       });
 
+      opportunityTable.current.set(updatedOpportunity.id, updatedOpportunity);
+
       setOpportunities((currentOpportunities) =>
         currentOpportunities.map((currentOpportunity) =>
           currentOpportunity.id === updatedOpportunity.id
@@ -101,13 +147,16 @@ function OpportunitiesSection() {
             : currentOpportunity,
         ),
       );
+      notify("Application submitted successfully.", "success");
     } catch (requestError) {
       if (requestError instanceof Error) {
         setApplyError(requestError.message);
+        notify(requestError.message, "error");
       } else {
         setApplyError(
           "Something went wrong while submitting your application.",
         );
+         
       }
     } finally {
       setApplyingOpportunityId(null);
@@ -115,6 +164,7 @@ function OpportunitiesSection() {
   }
 
   const filteredOpportunities = getFilteredOpportunities();
+  void historyVersion;
 
   useEffect(() => {
     void loadOpportunities();
@@ -136,6 +186,16 @@ function OpportunitiesSection() {
           <div className="apply-error-message" role="alert">
             {applyError}
           </div>
+        )}
+
+        {!opportunityHistory.current.isEmpty() && (
+          <button
+            className="back-history-button"
+            type="button"
+            onClick={handleBackToPreviousOpportunity}
+          >
+            ← Back to previous opportunity
+          </button>
         )}
 
         <div className="opportunity-feed">

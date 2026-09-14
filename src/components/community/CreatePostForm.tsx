@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { createPost } from "../../services/api";
 import type { Post, PostCategory } from "../../types";
+import { useNotifications } from "../notifications/NotificationCenter";
 
 interface CreatePostFormProps {
   onPostCreated: (post: Post) => void;
@@ -34,7 +35,7 @@ function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
   const [validationError, setValidationError] = useState("");
   const [requestError, setRequestError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
+const { notify } = useNotifications();
   const MIN_CHARACTERS = 3;
   const MAX_CHARACTERS = 2000;
 
@@ -93,12 +94,13 @@ function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
       });
 
       onPostCreated(newPost);
-
+      notify("Post published successfully.", "success");
       setContent("");
       setCategory("");
     } catch (error) {
       if (error instanceof Error) {
         setRequestError(error.message);
+        notify(error.message, "error");
       } else {
         setRequestError("Something went wrong while publishing your post.");
       }
