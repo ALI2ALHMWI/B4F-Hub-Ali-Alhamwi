@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import HashSet from "../../data-structures/HashSet";
 import { getOpportunities, updateOpportunity } from "../../services/api";
 import type {
   Opportunity,
@@ -17,10 +18,13 @@ function OpportunitiesSection() {
     type: "all",
     workMode: "all",
   });
-  const [expandedOpportunityId, setExpandedOpportunityId] = useState<number |null>(null);
-  
-  const [applyingOpportunityId, setApplyingOpportunityId] = useState<number | null>(null);
+  const [expandedOpportunityId, setExpandedOpportunityId] = useState< number | null>(null);
+
+  const [applyingOpportunityId, setApplyingOpportunityId] = useState<  number | null >(null);
   const [applyError, setApplyError] = useState<string | null>(null);
+  const savedOpportunityIds = useRef(new HashSet<number>());
+  const [savedVersion, setSavedVersion] = useState(0);
+
 
   async function loadOpportunities() {
     setLoading(true);
@@ -66,6 +70,16 @@ function OpportunitiesSection() {
       currentId === opportunityId ? null : opportunityId,
     );
   }
+  function handleToggleSaved(opportunityId: number): void {
+    if (savedOpportunityIds.current.has(opportunityId)) {
+      savedOpportunityIds.current.delete(opportunityId);
+    } else {
+      savedOpportunityIds.current.add(opportunityId);
+    }
+
+    setSavedVersion((currentVersion) => currentVersion + 1);
+  }
+
 
   async function handleApply(opportunity: Opportunity): Promise<void> {
     if (applyingOpportunityId !== null || opportunity.applied) {
@@ -135,6 +149,9 @@ function OpportunitiesSection() {
             onToggleDetails={handleToggleDetails}
             onApply={handleApply}
             applyingOpportunityId={applyingOpportunityId}
+            onToggleSaved={handleToggleSaved}
+            savedOpportunityIds={savedOpportunityIds.current}
+            savedVersion={savedVersion}
           />
         </div>
       </div>

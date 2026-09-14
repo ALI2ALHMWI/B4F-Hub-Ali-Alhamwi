@@ -11,6 +11,11 @@ interface OpportunityListProps {
   onToggleDetails: (opportunityId: number) => void;
   onApply: (opportunity: Opportunity) => Promise<void>;
   applyingOpportunityId: number | null;
+  onToggleSaved: (opportunityId: number) => void;
+  savedOpportunityIds: {
+    has: (value: number) => boolean;
+  };
+  savedVersion: number;
 }
 
 function OpportunityList({
@@ -23,7 +28,11 @@ function OpportunityList({
   onToggleDetails,
   onApply,
   applyingOpportunityId,
+  onToggleSaved,
+  savedOpportunityIds,
+  savedVersion,
 }: OpportunityListProps) {
+  void savedVersion;
   if (loading) {
     return (
       <div className="section-state" role="status">
@@ -87,7 +96,9 @@ function OpportunityList({
           key={opportunity.id}
           opportunity={opportunity}
           expanded={expandedOpportunityId === opportunity.id}
+          saved={savedOpportunityIds.has(opportunity.id)}
           onToggleDetails={onToggleDetails}
+          onToggleSaved={onToggleSaved}
           onApply={onApply}
           applying={applyingOpportunityId === opportunity.id}
         />
