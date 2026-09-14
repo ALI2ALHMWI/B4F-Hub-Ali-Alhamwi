@@ -53,6 +53,10 @@ function CommunityFilters({
     });
   }
 
+  function handleLikedChange(value: boolean): void {
+    onFiltersChange({ ...filters, onlyLiked: value });
+  }
+
   return (
     <div className="community-filters">
       <div className="filters-top-row">
@@ -61,6 +65,20 @@ function CommunityFilters({
             {visiblePosts} of {totalPosts} {totalPosts === 1 ? "post" : "posts"}
           </strong>
         </div>
+
+        <label
+          className={filters.onlyLiked ? "liked-filter active" : "liked-filter"}
+        >
+          <input
+            type="checkbox"
+            checked={filters.onlyLiked}
+            onChange={(event) => {
+              handleLikedChange(event.target.checked);
+            }}
+          />
+          <span aria-hidden="true">♥</span>
+          Liked only
+        </label>
       </div>
 
       <label className="search-field">

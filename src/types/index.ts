@@ -51,6 +51,7 @@ export interface UpdateOpportunityInput {
 export interface CommunityFilters {
   search: string;
   category: PostCategory | "all";
+  onlyLiked: boolean;
 }
 
 export interface OpportunityFilters {

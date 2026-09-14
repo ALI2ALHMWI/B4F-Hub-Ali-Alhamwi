@@ -796,7 +796,52 @@ button {
   background: #3457d5;
   border-color: #3457d5;
 }
+.liked-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid #dce3ef;
+  border-radius: 999px;
+  color: #59677d;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
 
+.liked-filter:hover {
+  color: #c9516b;
+  background: #fff0f3;
+  border-color: #f3c5cf;
+}
+
+.liked-filter input[type="checkbox"] {
+  width: 13px;
+  height: 13px;
+  accent-color: #c9516b;
+  cursor: pointer;
+}
+
+.liked-filter span {
+  color: #c2cad6;
+  font-size: 13px;
+}
+
+.liked-filter.active {
+  color: #c9516b;
+  background: #fff0f3;
+  border-color: #f3c5cf;
+}
+
+.liked-filter.active span {
+  color: #e16b83;
+}
 /* Mobile */
 
 @media (max-width: 800px) {
@@ -898,4 +943,7 @@ button {
   .filters-top-row select {
     width: 100%;
   }
+  .liked-filter {
+  align-self: flex-start;
+}
 }

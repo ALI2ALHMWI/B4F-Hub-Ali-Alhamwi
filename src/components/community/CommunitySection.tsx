@@ -18,6 +18,7 @@ function CommunitySection() {
   const [filters, setFilters] = useState<CommunityFiltersState>({
     search: "",
     category: "all",
+    onlyLiked: false,
   });
 
   async function loadPosts() {
@@ -80,8 +81,10 @@ function CommunitySection() {
         normalizedSearch === "" ||
         post.author.toLowerCase().includes(normalizedSearch) ||
         post.content.toLowerCase().includes(normalizedSearch);
+      
+      const matchesLiked = !filters.onlyLiked || post.liked;
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesSearch && matchesLiked;
     });
   }
 
