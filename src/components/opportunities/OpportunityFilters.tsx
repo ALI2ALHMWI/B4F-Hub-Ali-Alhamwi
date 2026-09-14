@@ -43,6 +43,12 @@ function OpportunityFilters({
   function handleWorkModeChange(value: WorkMode | "all"): void {
     onFiltersChange({ ...filters, workMode: value });
   }
+  function handleShowSavedOnlyChange(checked: boolean): void {
+    onFiltersChange({
+      ...filters,
+      showSavedOnly: checked,
+    });
+  }
 
   return (
     <div className="opportunity-filters">
@@ -102,6 +108,21 @@ function OpportunityFilters({
               </option>
             ))}
           </select>
+        </div>
+        <div>
+          <span className="filter-label">Saved</span>
+
+          <span className="saved-filter-control">
+            <input
+              type="checkbox"
+              checked={filters.showSavedOnly}
+              onChange={(event) => {
+                handleShowSavedOnlyChange(event.target.checked);
+              }}
+            />
+
+            <span>Show saved only</span>
+          </span>
         </div>
       </div>
     </div>

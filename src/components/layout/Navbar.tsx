@@ -3,11 +3,10 @@ function Navbar() {
     <header className="site-header">
       <div className="brand">
         <div className="brand-mark">B4F</div>
-
-        <div>
-          <h1>B4F Hub</h1>
-          <p>Community & opportunities</p>
-        </div>
+        <h1>Hub</h1>
+        <span className="span-hidden">
+          Community & Oppertunities for B4F tranies and alumni
+        </span>
       </div>
 
       <div className="header-user">

@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { getPosts, updatePost } from "../../services/api";
+import useFetch from "../../hooks/useFetch";
+
 import type {
   CommunityFilters as CommunityFiltersState,
   Post,
@@ -11,9 +13,16 @@ import CommunityFilters from "./CommunityFilters";
 import { useNotifications } from "../notifications/NotificationCenter";
 
 function CommunitySection() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const {
+  data: postsData,
+  loading,
+  error,
+  refetch: loadPosts,
+  updateData: updatePosts,
+} = useFetch<Post[]>(getPosts);
+
+const posts = postsData ?? [];
+
   const [likingPostId, setLikingPostId] = useState<number | null>(null);
   const [likeError, setLikeError] = useState<string | null>(null);
   const [filters, setFilters] = useState<CommunityFiltersState>({
@@ -24,25 +33,9 @@ function CommunitySection() {
   
 
 const { notify } = useNotifications();
-  async function loadPosts() {
-    setLoading(true);
-    setError(null);
-    try {
-      const loadedPosts = await getPosts();
-      setPosts(loadedPosts);
-    } catch (requestError) {
-      if (requestError instanceof Error) {
-        setError(requestError.message);
-      } else {
-        setError("Something went wrong while loading posts.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
+  
   function handlePostCreated(newPost: Post): void {
-    setPosts((currentPosts) => [newPost, ...currentPosts]);
+    updatePosts((currentPosts) => [newPost, ...(currentPosts ?? [])]);
 
   }
 
@@ -59,11 +52,12 @@ const { notify } = useNotifications();
         liked: !post.liked,
       });
 
-      setPosts((currentPosts) =>
-        currentPosts.map((currentPost) =>
-          currentPost.id === updatedPost.id ? updatedPost : currentPost,
-        ),
-      );
+     updatePosts((currentPosts) =>
+       (currentPosts ?? []).map((currentPost) =>
+         currentPost.id === updatedPost.id ? updatedPost : currentPost,
+       ),
+     );
+
       notify(
         updatedPost.liked
           ? "Post liked successfully."
@@ -100,10 +94,6 @@ const { notify } = useNotifications();
   }
 
   const filteredPosts = getFilteredPosts();
-
-  useEffect(() => {
-    void loadPosts();
-  }, []);
 
   return (
     <section className="hub-panel community-panel">

@@ -254,8 +254,9 @@ button {
 .site-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
   min-height: 64px;
   padding: 15px 40px;
   color: #8a96a8;
@@ -267,6 +268,7 @@ button {
 
 .site-footer p {
   margin: 0;
+  font-weight: bold;
 }
 
 .footer-links {
@@ -858,7 +860,9 @@ button {
     min-height: 72px;
     padding: 14px 18px;
   }
-
+  .span-hidden{
+    display: none;
+  }
   .user-info {
     display: none;
   }
@@ -920,6 +924,9 @@ button {
     border-radius: 12px;
     font-size: 11px;
   }
+  .span-hidden{
+    display: none;
+  }
 
   .brand h1 {
     font-size: 18px;
@@ -975,7 +982,7 @@ button {
   .apply-button {
     width: 100%;
   }
-    .opportunity-card-actions {
+  .opportunity-card-actions {
     align-items: stretch;
     flex-direction: column;
   }
@@ -983,10 +990,9 @@ button {
   .opportunity-card-actions button {
     width: 100%;
   }
-   .back-history-button {
+  .back-history-button {
     width: 100%;
   }
-
 }
 /* Opportunities */
 /* Opportunity details toggle + apply */
@@ -1137,8 +1143,8 @@ button {
   flex-shrink: 0;
   place-items: center;
   border-radius: 12px;
-  color: #3457d5;
-  background: #e8edff;
+  color: #000000b5;
+  background: #fffb00e0;
   font-size: 11px;
   font-weight: 800;
 }
@@ -1259,13 +1265,56 @@ button {
 }
 
 .opportunity-select-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
 }
 
-.opportunity-select-row > div {
-  flex: 1;
+.opportunity-select-row > div,
+.opportunity-select-row > label {
   min-width: 0;
+}
+.saved-filter {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.saved-filter-control {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #dce3ef;
+  border-radius: 9px;
+  color: #59677d;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.saved-filter-control:hover {
+  color: #3457d5;
+  border-color: #b9c6ef;
+  background: #f8faff;
+}
+
+.saved-filter-control input {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  accent-color: #3457d5;
+  cursor: pointer;
+}
+
+.saved-filter-control input:checked + span {
+  color: #3457d5;
 }
 
 .opportunity-select-row select {
@@ -1400,5 +1449,397 @@ button {
     bottom: 16px;
     left: 16px;
     width: auto;
+  }
+}
+
+/* ============================================================
+   Final responsive overrides
+   These rules intentionally come last so they override earlier
+   starter styles without changing the existing visual language.
+   ============================================================ */
+
+/* Prevent flex/grid children from creating horizontal overflow. */
+.main-content,
+.hub-panel,
+.community-content,
+.opportunities-content,
+.post-feed,
+.opportunity-feed,
+.post-card,
+.opportunity-card,
+.post-card-top,
+.opportunity-card-top,
+.post-card-bottom,
+.opportunity-card-bottom,
+.post-author,
+.opportunity-company {
+  min-width: 0;
+}
+
+.post-feed,
+.opportunity-feed {
+  overflow-x: hidden;
+}
+
+.post-content,
+.opportunity-description,
+.opportunity-company h3,
+.opportunity-company-name,
+.opportunity-location,
+.opportunity-deadline,
+.skill-chip {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+}
+
+/* Medium desktop/tablet layout. */
+@media (max-width: 1000px) and (min-width: 801px) {
+  .site-header {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .main-content {
+    gap: 16px;
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  .panel-heading {
+    padding: 18px;
+  }
+
+  .community-content,
+  .opportunities-content {
+    padding: 16px;
+  }
+
+  .post-card,
+  .opportunity-card {
+    padding: 15px;
+  }
+}
+
+/* Mobile: restore normal page flow and page-level scrolling. */
+@media (max-width: 800px) {
+  html,
+  body,
+  #root {
+    height: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body {
+    min-height: 100vh;
+  }
+
+  .app-shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    min-height: auto;
+    padding: 18px;
+    overflow: visible;
+  }
+
+  .hub-panel {
+    width: 100%;
+    min-height: auto;
+    overflow: visible;
+    border-radius: 18px;
+  }
+
+  .community-content,
+  .opportunities-content,
+  .post-feed,
+  .opportunity-feed {
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .community-content,
+  .opportunities-content {
+    padding: 18px 20px 22px;
+  }
+
+  .post-feed,
+  .opportunity-feed {
+    padding-right: 0;
+  }
+
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px;
+  }
+}
+
+/* Narrow phones. */
+@media (max-width: 480px) {
+  .site-header {
+    padding: 12px 16px;
+  }
+
+  .main-content {
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .panel-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px;
+  }
+
+  .panel-count {
+    align-self: flex-start;
+  }
+
+  .create-post-form {
+    padding: 12px;
+  }
+
+  .compose-actions,
+  .opportunity-card-bottom,
+  .opportunity-card-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .create-post-form select,
+  .primary-button,
+  .view-details-button,
+  .save-button,
+  .apply-button,
+  .back-history-button {
+    width: 100%;
+  }
+
+  .filters-top-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filters-top-row select,
+  .opportunity-select-row {
+    width: 100%;
+  }
+  .opportunity-select-row {
+    grid-template-columns: 1fr;
+  }
+
+  .saved-filter-control {
+    min-height: 40px;
+  }
+
+  .liked-filter {
+    align-self: flex-start;
+  }
+
+  .notification {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+    max-width: none;
+  }
+}
+
+/* =========================================================
+   Final compact desktop layout
+   The feed areas remain the only scrollable regions.
+   ========================================================= */
+
+@media (min-width: 801px) {
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .app-shell {
+    height: 100vh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .site-header {
+    min-height: 64px;
+    padding: 10px 40px;
+  }
+
+  .site-footer {
+    min-height: 46px;
+    padding: 10px 40px;
+  }
+
+  .main-content {
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 18px;
+    padding: 16px 40px;
+    overflow: hidden;
+  }
+
+  .hub-panel {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .panel-heading {
+    padding: 14px 18px;
+  }
+
+  .panel-heading h2 {
+    font-size: 23px;
+  }
+
+  .community-content,
+  .opportunities-content {
+    padding: 14px 18px;
+  }
+
+  .create-post-form {
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  .compose-heading {
+    margin-bottom: 7px;
+  }
+
+  .create-post-form textarea {
+    height: 54px;
+    min-height: 54px;
+    padding: 9px 11px;
+  }
+
+  .compose-actions {
+    margin-top: 8px;
+  }
+
+  .create-post-form select,
+  .primary-button {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .community-filters,
+  .opportunity-filters {
+    gap: 7px;
+    margin-bottom: 9px;
+    padding-bottom: 9px;
+  }
+
+  .search-field input {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .category-filter-buttons {
+    gap: 6px;
+  }
+
+  .category-filter-button,
+  .liked-filter {
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
+  .opportunity-select-row {
+    gap: 8px;
+  }
+
+  .opportunity-select-row select {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .saved-filter-control {
+    min-height: 32px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .post-feed,
+  .opportunity-feed {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .post-list,
+  .opportunity-list {
+    gap: 10px;
+  }
+
+  .post-card,
+  .opportunity-card {
+    padding: 13px;
+  }
+
+  .post-content {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .opportunity-meta-row {
+    margin-top: 9px;
+    margin-bottom: 9px;
+  }
+
+  .skills-list {
+    gap: 4px;
+  }
+
+  .skill-chip {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .opportunity-card-bottom {
+    padding-top: 9px;
+  }
+}
+
+/* Extra compact cards for wide desktop screens. */
+@media (min-width: 1200px) {
+  .post-card {
+    padding: 11px;
+  }
+
+  .post-content {
+    margin-top: 9px;
+    margin-bottom: 9px;
+    line-height: 1.4;
+  }
+
+  .post-card-bottom {
+    padding-top: 8px;
+  }
+
+  .post-list,
+  .opportunity-list {
+    gap: 8px;
   }
 }

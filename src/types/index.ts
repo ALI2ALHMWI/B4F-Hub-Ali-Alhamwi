@@ -58,4 +58,5 @@ export interface OpportunityFilters {
   search: string;
   type: OpportunityType | "all";
   workMode: WorkMode | "all";
+  showSavedOnly: boolean;
 }

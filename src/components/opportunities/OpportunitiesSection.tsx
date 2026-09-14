@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import HashSet from "../../data-structures/HashSet";
 import Stack from "../../data-structures/Stack";
 import HashTable from "../../data-structures/HashTable";
+import useFetch from "../../hooks/useFetch";
 import { getOpportunities, updateOpportunity } from "../../services/api";
 import type {
   Opportunity,
@@ -13,14 +14,23 @@ import OpportunityList from "./OpportunityList";
 import { useNotifications } from "../notifications/NotificationCenter";
 
 function OpportunitiesSection() {
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    data: opportunitiesData,
+    loading,
+    error,
+    refetch: loadOpportunities,
+    updateData: updateOpportunities,
+  } = useFetch<Opportunity[]>(getOpportunities);
+
+  const opportunities = opportunitiesData ?? [];
+
   const [filters, setFilters] = useState<OpportunityFiltersState>({
     search: "",
     type: "all",
     workMode: "all",
+    showSavedOnly: false,
   });
+
   const [expandedOpportunityId, setExpandedOpportunityId] = useState<
     number | null
   >(null);
@@ -36,28 +46,6 @@ function OpportunitiesSection() {
   const opportunityTable = useRef(new HashTable<Opportunity>());
   const { notify } = useNotifications();
 
-  async function loadOpportunities() {
-    setLoading(true);
-    setError(null);
-    try {
-      const loadedOpportunities = await getOpportunities();
-      setOpportunities(loadedOpportunities);
-      opportunityTable.current.clear();
-
-      loadedOpportunities.forEach((opportunity) => {
-        opportunityTable.current.set(opportunity.id, opportunity);
-      });
-    } catch (requestError) {
-      if (requestError instanceof Error) {
-        setError(requestError.message);
-      } else {
-        setError("Something went wrong while loading opportunities.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
   function getFilteredOpportunities(): Opportunity[] {
     const normalizedSearch = filters.search.trim().toLowerCase();
 
@@ -67,6 +55,9 @@ function OpportunitiesSection() {
 
       const matchesWorkMode =
         filters.workMode === "all" || opportunity.workMode === filters.workMode;
+      const matchesSavedFilter =
+        !filters.showSavedOnly ||
+        savedOpportunityIds.current.has(opportunity.id);
 
       const matchesSearch =
         normalizedSearch === "" ||
@@ -76,7 +67,9 @@ function OpportunitiesSection() {
           skill.toLowerCase().includes(normalizedSearch),
         );
 
-      return matchesType && matchesWorkMode && matchesSearch;
+      return (
+        matchesType && matchesWorkMode && matchesSearch && matchesSavedFilter
+      );
     });
   }
 
@@ -140,13 +133,14 @@ function OpportunitiesSection() {
 
       opportunityTable.current.set(updatedOpportunity.id, updatedOpportunity);
 
-      setOpportunities((currentOpportunities) =>
-        currentOpportunities.map((currentOpportunity) =>
+      updateOpportunities((currentOpportunities) =>
+        (currentOpportunities ?? []).map((currentOpportunity) =>
           currentOpportunity.id === updatedOpportunity.id
             ? updatedOpportunity
             : currentOpportunity,
         ),
       );
+
       notify("Application submitted successfully.", "success");
     } catch (requestError) {
       if (requestError instanceof Error) {
@@ -156,7 +150,6 @@ function OpportunitiesSection() {
         setApplyError(
           "Something went wrong while submitting your application.",
         );
-         
       }
     } finally {
       setApplyingOpportunityId(null);
@@ -165,10 +158,6 @@ function OpportunitiesSection() {
 
   const filteredOpportunities = getFilteredOpportunities();
   void historyVersion;
-
-  useEffect(() => {
-    void loadOpportunities();
-  }, []);
 
   return (
     <section className="hub-panel opportunities-panel">
