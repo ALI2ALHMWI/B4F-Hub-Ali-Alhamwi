@@ -57,26 +57,10 @@ function CommunityFilters({
     <div className="community-filters">
       <div className="filters-top-row">
         <div>
-          <span className="filter-label">COMMUNITY FEED</span>
-
           <strong>
             {visiblePosts} of {totalPosts} {totalPosts === 1 ? "post" : "posts"}
           </strong>
         </div>
-
-        <select
-          value={filters.category}
-          onChange={(event) => {
-            handleCategoryChange(event.target.value as PostCategory | "all");
-          }}
-          aria-label="Filter posts by category"
-        >
-          {categories.map((category) => (
-            <option key={category.value} value={category.value}>
-              {category.label}
-            </option>
-          ))}
-        </select>
       </div>
 
       <label className="search-field">
@@ -92,6 +76,32 @@ function CommunityFilters({
           aria-label="Search posts or authors"
         />
       </label>
+      <div
+        className="category-filter-buttons"
+        aria-label="Filter posts by category"
+      >
+        {categories.map((category) => {
+          const isActive = filters.category === category.value;
+
+          return (
+            <button
+              key={category.value}
+              className={
+                isActive
+                  ? "category-filter-button active"
+                  : "category-filter-button"
+              }
+              type="button"
+              onClick={() => {
+                handleCategoryChange(category.value);
+              }}
+              aria-pressed={isActive}
+            >
+              {category.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

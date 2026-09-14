@@ -16,13 +16,15 @@
 html,
 body,
 #root {
+  width: 100%;
   min-width: 320px;
-  min-height: 100%;
+  height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 
 body {
-  min-height: 100vh;
+  height: 100vh;
   background:
     radial-gradient(circle at top left, rgba(220, 234, 255, 0.7), transparent 30rem),
     #f4f7fb;
@@ -41,8 +43,10 @@ button {
 
 .app-shell {
   display: flex;
+  height: 100vh;
+  min-height: 0;
   flex-direction: column;
-  min-height: 100vh;
+  overflow: hidden;
 }
 
 /* Navbar */
@@ -56,6 +60,7 @@ button {
   background: #ffffff;
   border-bottom: 1px solid #e8edf4;
   box-shadow: 0 2px 12px rgba(31, 41, 55, 0.04);
+  flex-shrink: 0;
 }
 
 .brand {
@@ -130,20 +135,21 @@ button {
 .main-content {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  flex: 1;
+  flex: 1 1 0;
   gap: 22px;
   width: 100%;
   min-height: 0;
   max-width: 1520px;
   margin: 0 auto;
   padding: 26px 40px;
+  overflow: hidden;
 }
 
 .hub-panel {
   display: flex;
-  flex-direction: column;
   min-width: 0;
   min-height: 0;
+  flex-direction: column;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid #e6ebf2;
@@ -156,8 +162,9 @@ button {
   align-items: flex-start;
   justify-content: space-between;
   gap: 20px;
-  padding: 26px 26px 20px;
+  padding:20px;
   border-bottom: 1px solid #edf0f5;
+  flex-shrink: 0;
 }
 
 .eyebrow {
@@ -246,6 +253,7 @@ button {
   background: #ffffff;
   border-top: 1px solid #e8edf4;
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .site-footer p {
@@ -258,83 +266,62 @@ button {
   align-items: center;
 }
 
-/* Mobile */
+/* Community */
 
-@media (max-width: 800px) {
-  .site-header {
-    min-height: 72px;
-    padding: 14px 18px;
-  }
-
-  .user-info {
-    display: none;
-  }
-
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding: 18px;
-  }
-
-  .hub-panel {
-    min-height: 520px;
-  }
-
-  .panel-heading {
-    padding: 22px 20px 18px;
-  }
-
-  .panel-heading h2 {
-    font-size: 23px;
-  }
-
-  .panel-placeholder {
-    min-height: 330px;
-  }
-
-  .site-footer {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-    padding: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .brand-mark {
-    width: 39px;
-    height: 39px;
-    border-radius: 12px;
-    font-size: 11px;
-  }
-
-  .brand h1 {
-    font-size: 18px;
-  }
-
-  .brand p {
-    font-size: 11px;
-  }
-
-  .panel-heading {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .panel-count {
-    align-self: flex-start;
-  }
-
-  .footer-links {
-    flex-wrap: wrap;
-  }
-}
 .community-content {
-  flex: 1;
+  display: flex;
+  flex: 1 1 0;
   min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.community-content > .create-post-form,
+.community-content > .community-filters,
+.community-content > .like-error-message {
+  flex-shrink: 0;
+}
+.community-content::-webkit-scrollbar {
+  width: 7px;
+}
+
+.community-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.community-content::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #c7d0df;
+}
+
+.community-content::-webkit-scrollbar-thumb:hover {
+  background: #aebacd;
+}
+.post-feed {
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  flex-direction: column;
   overflow-y: auto;
-  padding: 20px 26px 26px;
+  padding-right: 4px;
+}
+
+.post-feed::-webkit-scrollbar {
+  width: 7px;
+}
+
+.post-feed::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.post-feed::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #c7d0df;
+}
+
+.post-feed::-webkit-scrollbar-thumb:hover {
+  background: #aebacd;
 }
 
 .post-list {
@@ -536,18 +523,15 @@ button {
   }
 }
 
-@media (max-width: 800px) {
-  .community-content {
-    overflow-y: visible;
-    padding: 18px 20px 22px;
-  }
-}
+/* Create Post Form */
+
 .create-post-form {
-  margin-bottom: 20px;
-  padding: 17px;
+  margin-bottom: 14px;
+  padding: 14px;
   background: #f8faff;
   border: 1px solid #e4eaf5;
   border-radius: 16px;
+  flex-shrink: 0;
 }
 
 .compose-heading {
@@ -555,9 +539,8 @@ button {
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 13px;
+  margin-bottom: 10px;
 }
-
 .compose-heading h3 {
   margin: 0;
   color: #27344a;
@@ -572,7 +555,7 @@ button {
 .create-post-form textarea {
   display: block;
   width: 100%;
-  min-height: 100px;
+  height: 64px;
   resize: vertical;
   padding: 12px;
   border: 1px solid #dce3ef;
@@ -583,7 +566,6 @@ button {
   font-size: 13px;
   line-height: 1.6;
 }
-
 .create-post-form textarea:focus {
   border-color: #849cf0;
   box-shadow: 0 0 0 3px rgba(52, 87, 213, 0.1);
@@ -652,17 +634,8 @@ button {
   color: #bb4e63;
 }
 
-@media (max-width: 480px) {
-  .compose-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
+/* Like button */
 
-  .create-post-form select,
-  .primary-button {
-    width: 100%;
-  }
-}
 .like-button {
   min-width: 72px;
   padding: 7px 11px;
@@ -704,14 +677,19 @@ button {
   background: #fff2f4;
   font-size: 12px;
   line-height: 1.5;
+  flex-shrink: 0;
 }
+
+/* Community Filters */
+
 .community-filters {
   display: flex;
   flex-direction: column;
-  gap: 13px;
-  margin-bottom: 18px;
-  padding-bottom: 17px;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
   border-bottom: 1px solid #edf0f5;
+  flex-shrink: 0;
 }
 
 .filters-top-row {
@@ -787,7 +765,131 @@ button {
   color: #a2adbc;
 }
 
+.category-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-filter-button {
+  padding: 7px 12px;
+  border: 1px solid #dce3ef;
+  border-radius: 999px;
+  color: #59677d;
+  background: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.category-filter-button:hover {
+  color: #3457d5;
+  background: #f1f4ff;
+  border-color: #b9c6ef;
+}
+
+.category-filter-button.active {
+  color: #ffffff;
+  background: #3457d5;
+  border-color: #3457d5;
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+  .site-header {
+    min-height: 72px;
+    padding: 14px 18px;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 18px;
+    overflow-y: auto;
+  }
+
+  .hub-panel {
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .panel-heading {
+    padding: 22px 20px 18px;
+  }
+
+  .panel-heading h2 {
+    font-size: 23px;
+  }
+
+  .panel-placeholder {
+    min-height: 330px;
+  }
+
+  .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px;
+  }
+
+ .community-content {
+    overflow: visible;
+    padding: 18px 20px 22px;
+  }
+
+  .post-feed {
+    overflow: visible;
+  }
+}
+
 @media (max-width: 480px) {
+  .brand-mark {
+    width: 39px;
+    height: 39px;
+    border-radius: 12px;
+    font-size: 11px;
+  }
+
+  .brand h1 {
+    font-size: 18px;
+  }
+
+  .brand p {
+    font-size: 11px;
+  }
+
+  .panel-heading {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panel-count {
+    align-self: flex-start;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+  }
+
+  .compose-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .create-post-form select,
+  .primary-button {
+    width: 100%;
+  }
+
   .filters-top-row {
     align-items: stretch;
     flex-direction: column;

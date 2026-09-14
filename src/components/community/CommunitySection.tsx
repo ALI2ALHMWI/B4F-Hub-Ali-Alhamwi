@@ -109,15 +109,18 @@ function CommunitySection() {
             {likeError}
           </div>
         )}
-        <PostList
-          posts={filteredPosts}
-          loading={loading}
-          totalPosts={posts.length}
-          error={error}
-          onRetry={loadPosts}
-          onToggleLike={handleToggleLike}
-          likingPostId={likingPostId}
-        />
+
+        <div className="post-feed">
+          <PostList
+            posts={filteredPosts}
+            loading={loading}
+            totalPosts={posts.length}
+            error={error}
+            onRetry={loadPosts}
+            onToggleLike={handleToggleLike}
+            likingPostId={likingPostId}
+          />
+        </div>
       </div>
     </section>
   );

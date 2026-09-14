@@ -111,7 +111,6 @@ function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
     <form className="create-post-form" onSubmit={handleSubmit}>
       <div className="compose-heading">
         <div>
-          <span className="eyebrow">SHARE WITH THE COMMUNITY</span>
           <h3>Create a post</h3>
         </div>
 
@@ -145,7 +144,7 @@ function CreatePostForm({ onPostCreated }: CreatePostFormProps) {
         </select>
 
         <button className="primary-button" type="submit" disabled={submitting}>
-          {submitting ? "Publishing..." : "Publish post"}
+          {submitting ? "Publishing..." : " post"}
         </button>
       </div>
 
