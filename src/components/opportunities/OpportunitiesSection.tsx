@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOpportunities } from "../../services/api";
+import { getOpportunities, updateOpportunity } from "../../services/api";
 import type {
   Opportunity,
   OpportunityFilters as OpportunityFiltersState,
@@ -17,6 +17,10 @@ function OpportunitiesSection() {
     type: "all",
     workMode: "all",
   });
+  const [expandedOpportunityId, setExpandedOpportunityId] = useState<number |null>(null);
+  
+  const [applyingOpportunityId, setApplyingOpportunityId] = useState<number | null>(null);
+  const [applyError, setApplyError] = useState<string | null>(null);
 
   async function loadOpportunities() {
     setLoading(true);
@@ -57,6 +61,45 @@ function OpportunitiesSection() {
     });
   }
 
+  function handleToggleDetails(opportunityId: number): void {
+    setExpandedOpportunityId((currentId) =>
+      currentId === opportunityId ? null : opportunityId,
+    );
+  }
+
+  async function handleApply(opportunity: Opportunity): Promise<void> {
+    if (applyingOpportunityId !== null || opportunity.applied) {
+      return;
+    }
+
+    setApplyError(null);
+    setApplyingOpportunityId(opportunity.id);
+
+    try {
+      const updatedOpportunity = await updateOpportunity(opportunity.id, {
+        applied: true,
+      });
+
+      setOpportunities((currentOpportunities) =>
+        currentOpportunities.map((currentOpportunity) =>
+          currentOpportunity.id === updatedOpportunity.id
+            ? updatedOpportunity
+            : currentOpportunity,
+        ),
+      );
+    } catch (requestError) {
+      if (requestError instanceof Error) {
+        setApplyError(requestError.message);
+      } else {
+        setApplyError(
+          "Something went wrong while submitting your application.",
+        );
+      }
+    } finally {
+      setApplyingOpportunityId(null);
+    }
+  }
+
   const filteredOpportunities = getFilteredOpportunities();
 
   useEffect(() => {
@@ -75,6 +118,12 @@ function OpportunitiesSection() {
           visibleOpportunities={filteredOpportunities.length}
         />
 
+        {applyError && (
+          <div className="apply-error-message" role="alert">
+            {applyError}
+          </div>
+        )}
+
         <div className="opportunity-feed">
           <OpportunityList
             opportunities={filteredOpportunities}
@@ -82,6 +131,10 @@ function OpportunitiesSection() {
             totalOpportunities={opportunities.length}
             error={error}
             onRetry={loadOpportunities}
+            expandedOpportunityId={expandedOpportunityId}
+            onToggleDetails={handleToggleDetails}
+            onApply={handleApply}
+            applyingOpportunityId={applyingOpportunityId}
           />
         </div>
       </div>

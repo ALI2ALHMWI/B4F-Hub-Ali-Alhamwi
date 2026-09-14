@@ -7,6 +7,10 @@ interface OpportunityListProps {
   totalOpportunities: number;
   error: string | null;
   onRetry: () => void;
+  expandedOpportunityId: number | null;
+  onToggleDetails: (opportunityId: number) => void;
+  onApply: (opportunity: Opportunity) => Promise<void>;
+  applyingOpportunityId: number | null;
 }
 
 function OpportunityList({
@@ -15,6 +19,10 @@ function OpportunityList({
   totalOpportunities,
   error,
   onRetry,
+  expandedOpportunityId,
+  onToggleDetails,
+  onApply,
+  applyingOpportunityId,
 }: OpportunityListProps) {
   if (loading) {
     return (
@@ -75,7 +83,14 @@ function OpportunityList({
   return (
     <div className="opportunity-list">
       {opportunities.map((opportunity) => (
-        <OpportunityCard key={opportunity.id} opportunity={opportunity} />
+        <OpportunityCard
+          key={opportunity.id}
+          opportunity={opportunity}
+          expanded={expandedOpportunityId === opportunity.id}
+          onToggleDetails={onToggleDetails}
+          onApply={onApply}
+          applying={applyingOpportunityId === opportunity.id}
+        />
       ))}
     </div>
   );
